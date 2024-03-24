@@ -4,7 +4,7 @@ import requests
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import FoodItem
-from .forms import FoodItemForm, IngredientForm
+from .forms import FoodItemForm, IngredientForm, CalorieIntakeForm
 from django.db.models import Sum
 
 def food_item_list(request):
@@ -60,3 +60,26 @@ def suggest_recipe(request):
         form = IngredientForm()
         recipes = []
     return render(request, 'calorie_tracker/suggest_recipe.html', {'form': form, 'recipes': recipes})
+
+def calorie_intake(request):
+    if request.method == 'POST':
+        form = CalorieIntakeForm(request.POST)
+        if form.is_valid():
+            height = form.cleaned_data['height']
+            weight = form.cleaned_data['weight']
+            response = requests.get(
+                "http://calorieapi-env.eba-udbdxf3g.us-east-1.elasticbeanstalk.com/api/calorie_intake",
+                params={'height': height, 'weight': weight}
+            )
+            if response.status_code == 200:
+                recommended_intake = response.json().get('calorie_intake')
+                # You can now pass this data to your template or further process it.
+            else:
+                # Handle errors
+                pass  # Remember to replace 'pass' with actual error handling
+    else:
+        form = CalorieIntakeForm()
+        recommended_intake = None  # Make sure this variable is defined outside the POST check if it's used in the template
+
+    # Render your form with context here
+    return render(request, 'calorie_tracker/calorie_intake.html', {'form': form, 'recommended_intake': recommended_intake})

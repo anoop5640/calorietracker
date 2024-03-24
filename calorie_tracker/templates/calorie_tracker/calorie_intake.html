@@ -1,0 +1,11 @@
+<!-- calorie_intake.html -->
+{% extends 'calorie_tracker/base.html' %} {% load widget_tweaks %}{% load static
+%} {% block content %}
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit">Calculate</button>
+</form>
+
+{% if recommended_intake %}
+<p>Recommended Calorie Intake: {{ recommended_intake }} calories/day</p>
+{% endif %} {% endblock %}
