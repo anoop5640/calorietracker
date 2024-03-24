@@ -2,6 +2,7 @@ from django.shortcuts import render
 import requests
 # Create your views here.
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from .models import FoodItem
 from .forms import FoodItemForm, IngredientForm
 from django.db.models import Sum
@@ -12,27 +13,30 @@ def food_item_list(request):
     return render(request, 'calorie_tracker/food_item_list.html', {'items': items, 'total_calories': total_calories})
 
 def add_food_item(request):
-    if request.method == "POST":
-        form = FoodItemForm(request.POST)
-        if form.is_valid():
-            # Extract the food name from the form
-            food_name = form.cleaned_data['name']
+    form = FoodItemForm(request.POST or None)
 
-            # Make an API request to get calorie information
-            response = requests.get(f"http://127.0.0.1:8080/api/calories?food_name={food_name}")
-            if response.status_code == 200:
-                calorie_data = response.json()
-                calories = calorie_data.get('calories', 0) # Assuming the API returns a JSON with a 'calories' field
+    if request.method == "POST" and form.is_valid():
+        food_name = form.cleaned_data['name']
 
-                # Save the FoodItem with the calorie data from the API
+        # Make an API request to get calorie information
+        response = requests.get(f"http://127.0.0.1:8080/api/calories?food_name={food_name}")
+        if response.status_code == 200:
+            calorie_data = response.json()
+            calories = calorie_data.get('calories')
+
+            # Check if the calories data is an integer
+            if isinstance(calories, int):
                 FoodItem.objects.create(name=food_name, calories=calories)
+                messages.success(request, f"Food item '{food_name}' added with {calories} calories.")
                 return redirect('food_item_list')
             else:
-                # Handle cases where the API call fails
-                print("Failed to fetch calorie information. Status Code:", response.status_code)
-                # You might want to redirect to an error page or display an error message
-    else:
-        form = FoodItemForm()
+                # If the API doesn't return an integer for calories, inform the user
+                messages.error(request, "Calorie information for this food item was not found.")
+        else:
+            # Handle cases where the API call fails
+            messages.error(request, f"Failed to fetch calorie information. Status Code: {response.status_code}")
+    
+    # If it's a GET request or the form is not valid, render the page with the form
     return render(request, 'calorie_tracker/add_food_item.html', {'form': form})
 
 def delete_food_item(request, pk):

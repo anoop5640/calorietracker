@@ -1,16 +1,46 @@
 {% extends 'calorie_tracker/base.html' %} {% block content %}
 <div>
-  <a href="{% url 'add_food_item' %}">Add Food Item</a> |
-  <a href="{% url 'suggest_recipe' %}">Suggest a Recipe</a>
+  <a href="{% url 'add_food_item' %}" class="btn btn-primary my-2"
+    >Add Food Item</a
+  >
+  <a href="{% url 'suggest_recipe' %}" class="btn btn-info my-2"
+    >Suggest a Recipe</a
+  >
 </div>
-<ul>
-  {% for item in items %}
-  <li>
-    {{ item.name }}: {{ item.calories }} calories
-    <a href="{% url 'delete_food_item' item.id %}">Delete</a>
-  </li>
-  {% empty %}
-  <li>No food items added yet.</li>
-  {% endfor %}
-</ul>
+
+<!-- Food Items Table -->
+<table class="table table-hover">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Food</th>
+      <th scope="col">Calories</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in items %}
+    <tr>
+      <td>{{ item.name }}</td>
+      <td>{{ item.calories }}</td>
+      <td>
+        <a
+          href="{% url 'delete_food_item' item.id %}"
+          class="btn btn-danger btn-sm"
+          >Delete</a
+        >
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3">No food items added yet.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Total Calories Section -->
+<div class="mt-3 p-2 bg-light border rounded">
+  <h4>Total Calorie Consumption: {{ total_calories }} calories</h4>
+</div>
+
 {% endblock %}
