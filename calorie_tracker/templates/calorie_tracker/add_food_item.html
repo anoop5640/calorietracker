@@ -1,0 +1,8 @@
+{% extends 'calorie_tracker/base.html' %} {% block content %}
+<h2>Add Food Item</h2>
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit">Add</button>
+</form>
+<a href="{% url 'food_item_list' %}">Back to List</a>
+{% endblock %}
