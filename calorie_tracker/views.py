@@ -3,7 +3,7 @@ import requests
 # Create your views here.
 from django.shortcuts import render, redirect
 from .models import FoodItem
-from .forms import FoodItemForm
+from .forms import FoodItemForm, IngredientForm
 from django.db.models import Sum
 
 def food_item_list(request):
@@ -38,3 +38,21 @@ def add_food_item(request):
 def delete_food_item(request, pk):
     FoodItem.objects.filter(id=pk).delete()
     return redirect('food_item_list')
+
+def suggest_recipe(request):
+    if request.method == 'POST':
+        form = IngredientForm(request.POST)
+        if form.is_valid():
+            ingredients = form.cleaned_data['ingredients']
+            api_url = f"http://127.0.0.1:8000/api/recipes/suggest/?ingredients={ingredients}"
+            response = requests.get(api_url)
+            if response.status_code == 200:
+                recipes = response.json()  # Assuming the API returns a list of recipes
+                return render(request, 'calorie_tracker/suggest_recipe.html', {'form': form, 'recipes': recipes})
+            else:
+                # Handle API errors
+                recipes = []
+    else:
+        form = IngredientForm()
+        recipes = []
+    return render(request, 'calorie_tracker/suggest_recipe.html', {'form': form, 'recipes': recipes})

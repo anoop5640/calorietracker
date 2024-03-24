@@ -1,0 +1,16 @@
+{% extends 'calorie_tracker/base.html' %} {% block content %}
+<h2>Suggest a Recipe</h2>
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit">Get Recipes</button>
+</form>
+
+<h3>Recipes</h3>
+<ul>
+  {% for recipe in recipes %}
+  <li>{{ recipe.name }} - {{ recipe.description }}</li>
+  {% empty %}
+  <li>No recipes found.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

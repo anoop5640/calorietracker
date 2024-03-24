@@ -1,6 +1,7 @@
 {% extends 'calorie_tracker/base.html' %} {% block content %}
 <div>
-  <a href="{% url 'add_food_item' %}">Add Food Item</a>
+  <a href="{% url 'add_food_item' %}">Add Food Item</a> |
+  <a href="{% url 'suggest_recipe' %}">Suggest a Recipe</a>
 </div>
 <ul>
   {% for item in items %}
@@ -12,5 +13,4 @@
   <li>No food items added yet.</li>
   {% endfor %}
 </ul>
-<h3>Total Calorie Consumption: {{ total_calories }} calories</h3>
 {% endblock %}
