@@ -8,8 +8,12 @@ class FoodItemForm(forms.ModelForm):
 
 
 class IngredientForm(forms.Form):
-    ingredients = forms.CharField(label='Enter Ingredients', max_length=100,
-                                  help_text='Enter ingredients separated by commas (e.g., chicken, potato)')
+    ingredients = forms.CharField(
+        label='Enter Ingredients',
+        max_length=200,
+        widget=forms.TextInput(attrs={'placeholder': 'e.g., Chicken, Tomato, Onion'}),
+        help_text='Enter ingredients separated by commas (e.g., chicken, tomato, onion).'
+    )
 
 
 class CalorieIntakeForm(forms.Form):
