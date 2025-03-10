@@ -12,7 +12,7 @@ jobs:
   build:
     uses: ./.github/workflows/build.yml
 
-  # Run SonarQube analysis after Build and Test jobs
+  # Run SonarQube analysis after Build job
   sonar:
-    needs: [build]
+    needs: build # This ensures the build job runs first
     uses: ./.github/workflows/sonar.yml
