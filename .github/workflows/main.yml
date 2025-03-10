@@ -1,0 +1,16 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # Run Build job first
+  build:
+    uses: ./.github/workflows/build.yml
+
+  # Run SonarQube analysis after Build and Test jobs
+  sonar:
+    needs: [build]
+    uses: ./.github/workflows/sonar.yml
