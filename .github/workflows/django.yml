@@ -65,7 +65,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
           SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }} # Only for SonarCloud
-          SONAR_BRANCH_NAME: main
+          SONAR_BRANCH_NAME: ${{ secrets.SONAR_BRANCH_NAME }}
 
       - name: Finished
         run: echo "Sonar scan completed !!!!"
