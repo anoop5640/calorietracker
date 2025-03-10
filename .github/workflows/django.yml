@@ -2,9 +2,9 @@ name: Django CI
 
 on:
   push:
-    branches: main
+    branches: [main]
   pull_request:
-    branches: main
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -29,42 +29,41 @@ jobs:
         run: |
           python test.py
 
-      #Build DOcker Image
+      # Build Docker Image
       - name: Build Docker Image
-        run: docker build -t djang-app .
+        run: docker build -t django-app .
 
-      # log in to docker to Docker hub
-      - name: push to docker hub
-        run: docker build -t djang-app .
-      #push DOcker image
+      # Log in to Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-          #run test
+      # Push Docker Image
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{secrets.DOCKERHUB_USERNAME}}/app:latest
-  #sonar qube analysis
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/app:latest
 
+  # SonarQube Analysis
   sonarqube:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Disabling shallow clones is recommended for improving the relevancy of reporting
+          fetch-depth: 0
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@v5.0.0
         env:
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          with:
-            args: >
-              -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-              -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-              -Dsonar.branch.name=main
-        
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+            -Dsonar.branch.name=main
 
       - name: Finished
         run: echo "Sonar scan completed !!!!"
