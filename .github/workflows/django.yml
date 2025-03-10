@@ -2,9 +2,9 @@ name: Django CI
 
 on:
   push:
-    branches: ["main"]
+    branches: main
   pull_request:
-    branches: ["main"]
+    branches: main
   workflow_dispatch:
 
 jobs:
@@ -63,5 +63,8 @@ jobs:
         # Ex: v4.0.0, See the latest version at https://github.com/marketplace/actions/sonarcloud-scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }} # Only for SonarCloud
+
       - name: Finished
         run: echo "Sonar scan completed !!!!"
