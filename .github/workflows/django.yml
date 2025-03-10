@@ -63,7 +63,7 @@ jobs:
           args: >
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            -Dsonar.branch.name=${{ secrets.SONAR_BRANCH_NAME }}
+            -Dsonar.branch.name=main
 
       - name: Finished
         run: echo "Sonar scan completed !!!!"
