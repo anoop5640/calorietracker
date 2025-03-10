@@ -63,7 +63,7 @@ jobs:
         # Ex: v4.0.0, See the latest version at https://github.com/marketplace/actions/sonarcloud-scan
       - name: debug envronment bariable
         run: |
-          echo: "SONAR_PROJECT_KEY: ${SONAR_PROJECT_KEY}"
+          echo: "SONAR_PROJECT_KEY: ${secrets.SONAR_PROJECT_KEY}"
           echo: "SONAR_ORGANIZATION: ${secrets.SONAR_ORGANIZATION}"
 
         env:
